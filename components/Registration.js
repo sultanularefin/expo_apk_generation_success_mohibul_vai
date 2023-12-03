@@ -10,7 +10,7 @@ const Registration = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const saveData = async () => {
-    const url = "http://localhost:8000/api/registration";
+    const url = "http://192.168.0.114:8000/api/registration";
     let result = await fetch(url, {
       method: "POST",
       headers: {

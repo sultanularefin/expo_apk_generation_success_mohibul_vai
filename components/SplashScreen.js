@@ -7,31 +7,61 @@ import {
   Image
 } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ( {navigation} ) => {
   //State for ActivityIndicator animation
   const [animating, setAnimating] = useState(true);
 
-  useEffect(() => {
+  const staticImage = require("../assets/logo.png");
+
+  const getUser = async () => {
+    // AsyncStorage.clear();
+    try {
+      const value = await AsyncStorage.getItem('user_name');
+      console.log(value);
+      if(value == null){
+        navigation.navigate("Login");
+      }
+      else{
+        navigation.navigate("Index");
+      }
+    } catch (e) {
+      console.log('Not Found');
+    }
+  };
+
+  useEffect( () => {
+
     setTimeout(() => {
-      setAnimating(false);
-      //Check if user_id is set or not
-      //If not then send for Authentication
-      //else send to Home Screen
-      AsyncStorage.getItem('user_id').then((value) =>
-        navigation.replace(
-          value === null ? 'Auth' : 'DrawerNavigationRoutes'
-        ),
-      );
-    }, 5000);
+      getUser();
+    }, 2000);
+    
+
+
+    // if(userName != ''){
+    //   navigation.navigate("Index");
+    // }
+    // else{
+    //   navigation.navigate("Login");
+    // }
+
+    // setTimeout(() => {
+    //   setAnimating(false);
+    //   // AsyncStorage.getItem('user_id').then((value) =>
+    //   //   navigation.replace(
+    //   //     value === null ? 'Auth' : 'DrawerNavigationRoutes'
+    //   //   ),
+    //   // );
+
+    // }, 5000);
   }, []);
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../Image/aboutreact.png')}
-        style={{width: '90%', resizeMode: 'contain', margin: 30}}
+       <Image
+        source={staticImage}
+        style={styles.logo}
       />
       <ActivityIndicator
         animating={animating}
@@ -50,10 +80,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#307ecc',
+    backgroundColor: '#45B3E0',
   },
   activityIndicator: {
-    alignItems: 'center',
-    height: 80,
+    alignItems: 'bottom',
+    height: 200,
   },
+  logo: {
+    resizeMode: "contain",
+    width: 100,
+    height: 100,
+    alignItems: "center",
+  }
 });
